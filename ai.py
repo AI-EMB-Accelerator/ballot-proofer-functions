@@ -41,7 +41,6 @@ for var in vars(ballot_content):
     pp(var, depth=1)
     print()
 
-
 for table in ballot_content.tables:
     print("Table: =====================")
     pp(table, depth=1)
