@@ -5,8 +5,9 @@ from azure.core.credentials import AzureKeyCredential
 from azure.ai.documentintelligence import DocumentIntelligenceClient
 from azure.ai.documentintelligence.models import AnalyzeDocumentRequest
 
+from typing import Optional
 
-def read_from_url(url: str):
+def read_from_url(url: str,  pages: Optional[str] = None) -> AnalyzeDocumentRequest:
     """
     This function reads a document from a URL using the Azure Document Intelligence client.
     """
@@ -24,7 +25,7 @@ def read_from_url(url: str):
     )
 
     poller = document_intelligence_client.begin_analyze_document(
-        "prebuilt-read", AnalyzeDocumentRequest(url_source=url), pages="1-4"
+        "prebuilt-layout", AnalyzeDocumentRequest(url_source=url), 
     )
 
     result = poller.result()

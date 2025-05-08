@@ -8,6 +8,7 @@ from prompts import ballot_definition_prompt
 
 load_dotenv()
 
+
 def get_definition(ballot_content):
     """
     This function gets the ballot definition from the Azure AI.
@@ -35,14 +36,15 @@ def get_definition(ballot_content):
             {
                 "role": "user",
                 "content": f"Define the ballot definition for the following content: '{ballot_content}'",
-            }
+            },
         ],
+        response_format={"type": "json_object"},
         max_completion_tokens=800,
         temperature=1.0,
         top_p=1.0,
         frequency_penalty=0.0,
         presence_penalty=0.0,
-        model=deployment
+        model=deployment,
     )
 
     return response.choices[0].message.content

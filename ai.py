@@ -3,6 +3,8 @@
 import os
 from dotenv import load_dotenv
 from openai import AzureOpenAI
+from pprint import pp
+
 
 from prompts import ballot_definition_prompt
 from utils.document import read_from_url
@@ -31,33 +33,41 @@ client = AzureOpenAI(
 # Step 3 - Proof
 # Inputs - Ballot Definition OFFICIAL, Ballot Content, Ballot Definition (Parsed)
 
-TEMP_FILE_URL = "https://ballotprooferstorage.blob.core.windows.net/ballots/ballot-type-1-english.pdf"
+TEMP_FILE_URL = "https://ballotprooferstorage.blob.core.windows.net/ballots/ballot-type-1-english-no-page-1.pdf"
 
 ballot_content = read_from_url(TEMP_FILE_URL)
 
-for page in ballot_content.pages:
-    print(page.page_number)
-    print(page.lines)
-    print("/n ==========================")
+for var in vars(ballot_content):
+    pp(var, depth=1)
+    print()
 
-response = client.chat.completions.create(
-    messages=[
-        {
-            "role": "system",
-            "content": ballot_definition_prompt,
-        },
-        {
-            "role": "user",
-            "content": f"Define the ballot definition for the following content: '{ballot_content}'",
-        }
-    ],
-    response_format={ "type": "json_object" },
-    max_completion_tokens=32000,
-    temperature=1.0,
-    top_p=1.0,
-    frequency_penalty=0.0,
-    presence_penalty=0.0,
-    model=deployment,
-)
 
-print(response.choices[0].message.content)
+for table in ballot_content.tables:
+    print("Table: =====================")
+    pp(table, depth=1)
+    print()
+
+# print("CONTENT =====================")
+# print(ballot_content)
+
+# response = client.chat.completions.create(
+#     messages=[
+#         {
+#             "role": "system",
+#             "content": ballot_definition_prompt,
+#         },
+#         {
+#             "role": "user",
+#             "content": f"Define the ballot definition for the following content: {ballot_content}'",
+#         },
+#     ],
+#     response_format={"type": "json_object"},
+#     max_completion_tokens=32000,
+#     temperature=1.0,
+#     top_p=1.0,
+#     frequency_penalty=0.0,
+#     presence_penalty=0.0,
+#     model=deployment,
+# )
+
+# print(response.choices[0].message.content)
