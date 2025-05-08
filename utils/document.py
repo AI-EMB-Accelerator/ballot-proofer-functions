@@ -14,7 +14,7 @@ def read_from_url(url: str):
     endpoint: str = os.getenv("AZURE_DOCUMENT_INTELLIGENCE_ENDPOINT") or ""
     key: str = os.getenv("AZURE_DOCUMENT_INTELLIGENCE_KEY") or ""
 
-    if endpoint is "" or key is "":
+    if endpoint == "" or key == "":
         raise ValueError(
             "Please set the Azure Document Intelligence environment variables"
         )
@@ -24,10 +24,9 @@ def read_from_url(url: str):
     )
 
     poller = document_intelligence_client.begin_analyze_document(
-        "prebuilt-read", AnalyzeDocumentRequest(url_source=url)
+        "prebuilt-read", AnalyzeDocumentRequest(url_source=url), pages="1-4"
     )
 
     result = poller.result()
-    print("Document contains content: ", result)
 
     return result
