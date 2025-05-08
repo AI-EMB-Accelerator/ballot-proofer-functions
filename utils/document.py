@@ -19,7 +19,7 @@ def read_from_url(url: str):
             "Please set the Azure Document Intelligence environment variables"
         )
 
-    document_intelligence_client  = DocumentIntelligenceClient(
+    document_intelligence_client = DocumentIntelligenceClient(
         endpoint=endpoint, credential=AzureKeyCredential(key)
     )
 
