@@ -10,7 +10,10 @@ ModelId = Literal["prebuilt-layout", "prebuilt-read"]
 
 
 def read_from_url(
-    url: str, model_id: Optional[ModelId] = "prebuilt-read", pages: Optional[str] = None
+    url: str,
+    model_id: Optional[ModelId] = "prebuilt-read",
+    pages: Optional[str] = None,
+    high_power: Optional[bool] = False,
 ) -> AnalyzeDocumentRequest:
     """
     This function reads a document from a URL using the Azure Document Intelligence client.
@@ -29,7 +32,10 @@ def read_from_url(
     )
 
     poller = document_intelligence_client.begin_analyze_document(
-        model_id=model_id, body=AnalyzeDocumentRequest(url_source=url), pages=pages
+        model_id=model_id,
+        body=AnalyzeDocumentRequest(url_source=url),
+        pages=pages,
+        features=["ocrHighResolution"] if high_power else [],
     )
 
     result = poller.result()
