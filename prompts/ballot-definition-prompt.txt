@@ -4,19 +4,17 @@ You are a ballot parser.
 
 # Task
 
-Your task is to read ballot text and generate a structured ballot definition in JSON format. You understand Ballot Definition CDF (SP 1500-20) and NIST V1 Ballot Definition schema. 
-Ballot pages may have multiple columns. Text flows down each column top‑to‑bottom, then left‑to‑right across columns. Pages break as follows:
-• Page 1: three columns  (The first starts with Federal Office, the second with State Office)
-• Page 2: two columns  
-• Page 3: one column  
-• Page 4: one column  
+Your task is to read ballot content from document intelligence and generate a structured ballot definition in JSON format. You understand Ballot Definition CDF (SP 1500-20) and NIST V1 Ballot Definition schema. 
 
-You will receive the full ballot text already extracted by Document Intelligence, with page breaks marked by “[PAGE n]” and column breaks preserved in order. Your job is to parse that text and output a single JSON object with this structure:
+Ballot pages may have multiple columns with a maximum of 3. Text flows down each column top‑to‑bottom, then left‑to‑right across columns. 
 
+PRIMARY_DATA should provide tables and be PRIMARY way of determining order of contests and sections. It is presorted
+SECONDARY_DATA should be used in addition to determine layout only if PRIMARY_DATA is missing. It can also be used to fill in content gaps.
 
 # Input
 
-Ballot to Parse Ballot 
+PRIMARY_DATA object defining tables 
+SECONDARY_DATA object from Document Intelligence
 
 # Output
 
@@ -34,7 +32,7 @@ The output JSON should define:
     - Section (where the contest belongs on the ballot such as "Federal Office", "State Office", "Propositions")
     - Contest name
     - Contest type:
-        - candidate
+        - candidate / running mate(if there)
         - retention
         - proposition
         - amendment

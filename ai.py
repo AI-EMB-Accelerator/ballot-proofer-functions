@@ -33,40 +33,64 @@ client = AzureOpenAI(
 # Step 3 - Proof
 # Inputs - Ballot Definition OFFICIAL, Ballot Content, Ballot Definition (Parsed)
 
-TEMP_FILE_URL = "https://ballotprooferstorage.blob.core.windows.net/ballots/ballot-type-1-english-no-page-1.pdf"
 
-ballot_content = read_from_url(TEMP_FILE_URL)
+def cleanup_tables(tables):
+    """
+    Cleans up the tables by removing empty cells and sorting them.
+    """
 
-for var in vars(ballot_content):
-    pp(var, depth=1)
-    print()
+    tables_out = []
 
-for table in ballot_content.tables:
-    print("Table: =====================")
-    pp(table, depth=1)
-    print()
+    if tables:
+        for table in ballot_layout.tables:
+            # Collect cells with the required attributes
+            cells = []
+            for cell in table.cells:
+                cells.append(
+                    {
+                        "page": cell.bounding_regions[0].page_number,
+                        "column": cell.column_index,
+                        "row": cell.row_index,
+                        "content": cell.content,
+                    }
+                )
 
-# print("CONTENT =====================")
-# print(ballot_content)
+            # Sort cells by column first, then row
+            sorted_cells = sorted(cells, key=lambda c: (c["column"], c["row"]))
 
-# response = client.chat.completions.create(
-#     messages=[
-#         {
-#             "role": "system",
-#             "content": ballot_definition_prompt,
-#         },
-#         {
-#             "role": "user",
-#             "content": f"Define the ballot definition for the following content: {ballot_content}'",
-#         },
-#     ],
-#     response_format={"type": "json_object"},
-#     max_completion_tokens=32000,
-#     temperature=1.0,
-#     top_p=1.0,
-#     frequency_penalty=0.0,
-#     presence_penalty=0.0,
-#     model=deployment,
-# )
+            # Add to output tables list
+            tables_out.append(sorted_cells)
 
-# print(response.choices[0].message.content)
+    return tables_out
+
+
+TEMP_FILE_URL = "https://ballotprooferstorage.blob.core.windows.net/ballots/ballot-type-1-english.pdf"
+
+print("Reading from URL for Layout...")
+ballot_layout = read_from_url(TEMP_FILE_URL, model_id="prebuilt-layout", pages="1-4")
+organized_data = cleanup_tables(ballot_layout.tables)
+
+print("Reading from URL for Content...")
+backup_data = read_from_url(TEMP_FILE_URL, model_id="prebuilt-read", pages="1-4")
+
+response = client.chat.completions.create(
+    messages=[
+        {
+            "role": "system",
+            "content": ballot_definition_prompt,
+        },
+        {
+            "role": "user",
+            "content": f"Define the ballot definition using this PRIMARY LAYOUT: '{organized_data}' and this BACKUP LAYOUT: '{backup_data}'",
+        },
+    ],
+    response_format={"type": "json_object"},
+    max_completion_tokens=32000,
+    temperature=1.0,
+    top_p=1.0,
+    frequency_penalty=0.0,
+    presence_penalty=0.0,
+    model=deployment,
+)
+
+print(response.choices[0].message.content)
