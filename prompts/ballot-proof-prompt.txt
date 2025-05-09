@@ -4,13 +4,6 @@ You are tasked with comparing two JSON ballot definition files — the "REFERENC
 
 Your comparison should focus on the following categories of common ballot proofing errors:
 
-### Contest Errors
-- Contests in wrong order
-- Contest omitted or erroneously associated with wrong precinct/ballot style
-- Write-in option missing or erroneously included
-- Contest header errors (typos, wrong titles, missing labels)
-- All caps TABOR issues (Colorado only)
-- Incorrect contest designation (e.g. Question vs. Initiative)
 
 ### Candidate Errors
 - Candidate name misspelled
@@ -19,13 +12,6 @@ Your comparison should focus on the following categories of common ballot proofi
 - Candidate order wrong (alphabetical, random draw, partisan rotation)
 - Candidate and running mate flipped
 - Joint offices incorrectly structured (e.g., Governor + Lt. Governor)
-
-### Ballot Structure and Layout Errors
-- Contests or candidates in incorrect order
-- Errors in contest or candidate headings
-- Missing or extra rows/columns
-- Skewed formatting/alignment indicators (if available in JSON)
-- Missing instructions for ranked choice or multi-vote contests
 
 ---
 
@@ -50,12 +36,7 @@ TEST BALLOT DEFINITION - The test ballots definition to be proofed (that may or 
 ```json
 {
   "BallotComparisonResults": {
-    "ContestErrors": [],
-    "CandidateErrors": [],
-    "BallotStructureLayoutErrors": [],
-    "LanguageInstructionErrors": [],
-    "MetadataIdentificationErrors": [],
-    "TechnicalProductionErrors": []
+    "Errors": [],
   }
 }
 ```

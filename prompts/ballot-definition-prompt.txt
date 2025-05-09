@@ -139,6 +139,8 @@ The output JSON should define:
 # RULES
 🚫 Do not add explanations. Output ONLY valid JSON.
 🚫 Don't include JSON markdown in your answer.
+🚫 Parties should NOT be shown in option names for example "CANDIDATE A" vs "CANDIDATE A (DEM)"
+🚫 Write Ins options should NOT say anything other than "WRITE IN" for consistency
 ✅ Always keep the same casing. If it is in all caps, it should remain in all caps
 ✅ Be as consistent as possible
 ✅ The ballot strings may be in English or Spanish
