@@ -26,7 +26,7 @@ client = AzureOpenAI(
 
 
 OUTPUT_FILE = "ballot_definition.json"
-PAGES = "1-4"
+PAGES = "1"
 
 BALLOT_FILE_1_ENGLISH = "https://ballotprooferstorage.blob.core.windows.net/ballots/ballot-type-1-english.pdf"
 BALLOT_FILE_2_SPANISH = "https://ballotprooferstorage.blob.core.windows.net/ballots/ballot-type-1-spanish.pdf"
