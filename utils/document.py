@@ -41,3 +41,32 @@ def read_from_url(
     result = poller.result()
 
     return result
+
+def cleanup_tables(tables):
+    """
+    Cleans up the tables by removing empty cells and sorting them.
+    """
+
+    tables_out = []
+
+    if tables:
+        for table in tables:
+            # Collect cells with the required attributes
+            cells = []
+            for cell in table.cells:
+                cells.append(
+                    {
+                        "page": cell.bounding_regions[0].page_number,
+                        "column": cell.column_index,
+                        "row": cell.row_index,
+                        "content": cell.content,
+                    }
+                )
+
+            # Sort cells by column first, then row
+            sorted_cells = sorted(cells, key=lambda c: (c["column"], c["row"]))
+
+            # Add to output tables list
+            tables_out.append(sorted_cells)
+
+    return tables_out

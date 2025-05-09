@@ -133,3 +133,7 @@ __blobstorage__
 __queuestorage__
 __azurite_db*__.json
 .python_packages
+
+# Input and output directories
+input/
+output/
