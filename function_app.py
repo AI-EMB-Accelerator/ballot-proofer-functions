@@ -10,8 +10,6 @@ from ballot.define import get_definition
 from ballot.proof import proof_ballot, locate_proof_errors
 from utils.storage import save_to_blob_storage
 
-from ai.document import read_from_url
-
 
 # Load environment variables from .env file
 load_dotenv()
@@ -92,7 +90,7 @@ def proof_ballot_api(req: func.HttpRequest) -> func.HttpResponse:
 
 
 @app.function_name(name="DefineBallot")
-@app.route(route="define")
+@app.route(route="define", methods=["POST"])
 def define_ballot_api(req: func.HttpRequest) -> func.HttpResponse:
     """HTTP triggered function to get a ballot definition."""
 
