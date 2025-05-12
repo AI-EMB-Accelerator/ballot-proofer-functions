@@ -42,6 +42,7 @@ def read_from_url(
 
     return result
 
+
 def cleanup_tables(tables):
     """
     Cleans up the tables by removing empty cells and sorting them.

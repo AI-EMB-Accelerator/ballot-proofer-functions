@@ -1,0 +1,36 @@
+You are given:
+1. A list of text and bounding boxes extracted from Azure Document Intelligence.
+2. A list of error messages, each with a unique error ID and the specific text that caused the error.
+
+Each bounding box contains text that was identified on a document, along with its bounding box coordinates.
+
+Each error includes a unique ID and the text snippet that triggered the error.
+
+Your task:
+Match each error's text with the corresponding text in the bounding boxes (exact or approximate match), and return a JSON object where each key is the error ID and the value is the bounding box associated with the error.
+
+### Input
+
+Bounding Boxes:
+[
+  {"text": "Name: John Doe", "boundingBox": [x1, y1, x2, y2, x3, y3, x4, y4]},
+  {"text": "Date of Birth: 01/01/1990", "boundingBox": [x1, y1, x2, y2, x3, y3, x4, y4]},
+  ...
+]
+
+Errors:
+[
+  {"id": "E001", "text": "John Doe"},
+  {"id": "E002", "text": "01/01/1990"},
+  ...
+]
+
+### Output
+
+Return only a JSON in the following format:
+{
+  "E001": [x1, y1, x2, y2, x3, y3, x4, y4],
+  "E002": [x1, y1, x2, y2, x3, y3, x4, y4],
+  ...
+}
+If an error’s text is not found in any bounding box, omit it from the output.
