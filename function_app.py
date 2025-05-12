@@ -1,16 +1,20 @@
 """Module to define the Azure Function App for proofing ballots."""
 
+import json
 import logging
+import tempfile
 import azure.functions as func
 from dotenv import load_dotenv
 
-from utils.document import read_from_url
+from ballot.define import get_definition
+from ballot.proof import proof_ballot, locate_proof_errors
+from utils.storage import save_to_blob_storage
+
+from ai.document import read_from_url
 
 
 # Load environment variables from .env file
 load_dotenv()
-
-TEMP_FILE_URL = "https://ballotprooferstorage.blob.core.windows.net/ballots/ballot-type-1-english.pdf"
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
 
@@ -39,36 +43,82 @@ def hello(req: func.HttpRequest) -> func.HttpResponse:
 
 @app.function_name(name="ProofBallot")
 @app.route(route="proof", methods=["POST"])
-def proof_ballot(req: func.HttpRequest) -> func.HttpResponse:
+def proof_ballot_api(req: func.HttpRequest) -> func.HttpResponse:
     """HTTP triggered function to proof a ballot."""
 
     logging.info("Proof ballot triggered.")
 
-    # 1. Store ballot in blob storage -> Get URL
-    # 2. Call Document Intelligence API to read the ballot
-    # 3. Use Azure AI to define the ballot
-    # 4. Proof the ballot
-    # 5. Return the result
+    try:
+        # Validate inputs
+        ballot = req.files.get("ballot")
+        reference = req.files.get("reference")
+        pages = req.form.get("pages") or "1"
+        locators = req.form.get("locators") == "true"
 
-    return func.HttpResponse("WHERE IS THE PROOF?", status_code=200)
+        if not ballot or not reference:
+            return func.HttpResponse(
+                "Missing 'ballot' or 'reference' in form-data", status_code=400
+            )
+
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_file:
+            tmp_file.write(ballot.stream.read())
+            ballot_path = tmp_file.name
+
+        blob_url = save_to_blob_storage(ballot_path)
+        logging.info("Ballot uploaded to blob storage: %s", blob_url)
+
+        try:
+            reference_ballot_definition = json.load(reference.stream)
+        except json.JSONDecodeError:
+            return func.HttpResponse(
+                "Invalid JSON in 'reference' file", status_code=400
+            )
+
+        test_ballot_definition = get_definition(blob_url, pages=pages)
+        proof = proof_ballot(test_ballot_definition, reference_ballot_definition)
+        locators = (
+            locate_proof_errors(proof, blob_url, pages=pages) if locators else None
+        )
+
+        return func.HttpResponse(
+            {"proof": proof, "locators": locators, "ballot_url": blob_url},
+            mimetype="application/json",
+            status_code=200,
+        )
+
+    except (ValueError, json.JSONDecodeError, IOError) as e:
+        logging.exception("Error during ballot proofing.")
+        return func.HttpResponse(f"Internal Server Error: {str(e)}", status_code=500)
 
 
 @app.function_name(name="DefineBallot")
 @app.route(route="define")
-def define_ballot(req: func.HttpRequest) -> func.HttpResponse:
+def define_ballot_api(req: func.HttpRequest) -> func.HttpResponse:
     """HTTP triggered function to get a ballot definition."""
 
-    logging.info("Defining a ballot triggered.")
+    logging.info("Define ballot triggered.")
 
-    # 1. Store ballot in blob storage -> Get URL
+    try:
+        # Validate inputs
+        file = req.files.get("file")
+        pages = req.form.get("pages") or "1"
 
-    # 2. Call Document Intelligence API to read the ballot
-    result = read_from_url(TEMP_FILE_URL)
+        if not file:
+            return func.HttpResponse("Missing 'file' in form-data", status_code=400)
 
-    # 3. Use Azure AI to define the ballot
-    # 4. Return the result
+        with tempfile.NamedTemporaryFile(delete=False, suffix=".pdf") as tmp_file:
+            tmp_file.write(file.stream.read())
+            ballot_path = tmp_file.name
 
-    if not result:
-        return func.HttpResponse("No ballot found.", status_code=404)
+        blob_url = save_to_blob_storage(ballot_path)
+        logging.info("Ballot uploaded to blob storage: %s", blob_url)
 
-    return func.HttpResponse(result.content, status_code=200)
+        definition = get_definition(blob_url, pages=pages)
+
+        return func.HttpResponse(
+            {"definition": definition}, mimetype="application/json", status_code=200
+        )
+
+    except (ValueError, json.JSONDecodeError, IOError) as e:
+        logging.exception("Error during ballot proofing.")
+        return func.HttpResponse(f"Internal Server Error: {str(e)}", status_code=500)
