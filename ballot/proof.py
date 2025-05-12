@@ -1,8 +1,8 @@
 """Proofing the ballot using the test and reference definitions."""
 
-from ..ai.prompts import ballot_proof_prompt
-from ..ai.chat import send_prompt
-from ..ai.document import read_from_url
+from ai.prompts import ballot_proof_prompt
+from ai.chat import send_prompt
+from ai.document import read_from_url
 
 
 def proof_ballot(test_definition, reference_definition):

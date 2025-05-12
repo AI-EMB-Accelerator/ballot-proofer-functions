@@ -1,9 +1,9 @@
 """Module to define the ballot using Azure AI."""
 
 from typing import Optional
-from ..ai.document import read_from_url, cleanup_tables
-from ..ai.chat import send_prompt
-from ..ai.prompts import ballot_definition_prompt
+from ai.document import read_from_url, cleanup_tables
+from ai.chat import send_prompt
+from ai.prompts import ballot_definition_prompt
 
 
 def get_definition(ballot_url: str, pages: Optional[str] = "1") -> str:
