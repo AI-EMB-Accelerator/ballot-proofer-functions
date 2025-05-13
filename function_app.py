@@ -75,7 +75,7 @@ def proof_ballot_api(req: func.HttpRequest) -> func.HttpResponse:
 
         response = {
             "proof": json.loads(proof),
-            "locators": locators,
+            "locators": json.loads(locators) if locators else None,
             "ballot_url": blob_url,
         }
         body = json.dumps(response)
