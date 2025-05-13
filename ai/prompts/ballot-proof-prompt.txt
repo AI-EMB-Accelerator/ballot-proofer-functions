@@ -66,13 +66,13 @@ TEST BALLOT DEFINITION - The test ballots definition to be proofed (that may or 
 
 ```json
 {
-  "BallotComparisonResults": {
-    "ContestErrors": [],
-    "CandidateErrors": [],
-    "BallotStructureLayoutErrors": [],
-    "LanguageInstructionErrors": [],
-    "MetadataIdentificationErrors": [],
-    "TechnicalProductionErrors": []
+  "errors": {
+    "contests": [],
+    "candidates": [],
+    "ballotStructure": [],
+    "languageStructure": [],
+    "metadata": [],
+    "technical": []
   }
 }
 ```
