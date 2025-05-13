@@ -17,6 +17,7 @@ def proof_ballot(test_definition, reference_definition):
     )
     return proof
 
+
 def locate_proof_errors(proof, ballot_url, pages="1"):
     """
     Locate proof errors in the ballot data.

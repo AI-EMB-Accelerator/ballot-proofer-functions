@@ -115,9 +115,13 @@ def define_ballot_api(req: func.HttpRequest) -> func.HttpResponse:
 
         definition = get_definition(blob_url, pages=pages)
 
-        return func.HttpResponse(
-            {"definition": definition}, mimetype="application/json", status_code=200
-        )
+        response = {
+            "definition": json.loads(definition),
+            "ballot_url": blob_url,
+        }
+        body = json.dumps(response)
+
+        return func.HttpResponse(body, mimetype="application/json", status_code=200)
 
     except (ValueError, json.JSONDecodeError, IOError) as e:
         logging.exception("Error during ballot proofing.")
