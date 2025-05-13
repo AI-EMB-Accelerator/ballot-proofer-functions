@@ -10,8 +10,6 @@ from ballot.define import get_definition
 from ballot.proof import proof_ballot, locate_proof_errors
 from utils.storage import save_to_blob_storage
 
-from ai.document import read_from_url
-
 
 # Load environment variables from .env file
 load_dotenv()
@@ -51,7 +49,7 @@ def proof_ballot_api(req: func.HttpRequest) -> func.HttpResponse:
     try:
         # Validate inputs
         ballot = req.files.get("ballot")
-        reference = req.files.get("reference")
+        reference = req.form.get("reference") or "{}"
         pages = req.form.get("pages") or "1"
         locators = req.form.get("locators") == "true"
 
@@ -67,12 +65,7 @@ def proof_ballot_api(req: func.HttpRequest) -> func.HttpResponse:
         blob_url = save_to_blob_storage(ballot_path)
         logging.info("Ballot uploaded to blob storage: %s", blob_url)
 
-        try:
-            reference_ballot_definition = json.load(reference.stream)
-        except json.JSONDecodeError:
-            return func.HttpResponse(
-                "Invalid JSON in 'reference' file", status_code=400
-            )
+        reference_ballot_definition = reference
 
         test_ballot_definition = get_definition(blob_url, pages=pages)
         proof = proof_ballot(test_ballot_definition, reference_ballot_definition)
@@ -80,8 +73,15 @@ def proof_ballot_api(req: func.HttpRequest) -> func.HttpResponse:
             locate_proof_errors(proof, blob_url, pages=pages) if locators else None
         )
 
+        response = {
+            "proof": json.loads(proof),
+            "locators": json.loads(locators) if locators else None,
+            "ballot_url": blob_url,
+        }
+        body = json.dumps(response)
+
         return func.HttpResponse(
-            {"proof": proof, "locators": locators, "ballot_url": blob_url},
+            body,
             mimetype="application/json",
             status_code=200,
         )
@@ -92,7 +92,7 @@ def proof_ballot_api(req: func.HttpRequest) -> func.HttpResponse:
 
 
 @app.function_name(name="DefineBallot")
-@app.route(route="define")
+@app.route(route="define", methods=["POST"])
 def define_ballot_api(req: func.HttpRequest) -> func.HttpResponse:
     """HTTP triggered function to get a ballot definition."""
 
@@ -115,9 +115,13 @@ def define_ballot_api(req: func.HttpRequest) -> func.HttpResponse:
 
         definition = get_definition(blob_url, pages=pages)
 
-        return func.HttpResponse(
-            {"definition": definition}, mimetype="application/json", status_code=200
-        )
+        response = {
+            "definition": json.loads(definition),
+            "ballot_url": blob_url,
+        }
+        body = json.dumps(response)
+
+        return func.HttpResponse(body, mimetype="application/json", status_code=200)
 
     except (ValueError, json.JSONDecodeError, IOError) as e:
         logging.exception("Error during ballot proofing.")

@@ -11,6 +11,10 @@ Ballot pages may have multiple columns with a maximum of 3. Text flows down each
 PRIMARY_DATA should provide tables and be PRIMARY way of determining order of contests and sections. It is presorted
 SECONDARY_DATA should be used in addition to determine layout only if PRIMARY_DATA is missing. It can also be used to fill in content gaps.
 
+Examples of fixing layout data: 
+1. Ensuring candidate and running mate are split by a "/" such as "Candidate A Running Mate A" to "Candidate A / Running Mate A"
+2. Ensuring Write-ins only say "WRITE-IN" instead of "WRITE IN PRES VP" or "WRITE IN"
+
 # Input
 
 PRIMARY_DATA object defining tables 
@@ -30,6 +34,7 @@ The output JSON should define:
     - Full name
 - Contests:
     - Section (where the contest belongs on the ballot such as "Federal Office", "State Office", "Propositions")
+    - Order (contest position)
     - Contest name
     - Contest type:
         - candidate / running mate(if there)
@@ -52,7 +57,7 @@ The output JSON should define:
     "name": "Salt Lake County General Election 2024",
     "jurisdiction": "Salt Lake County, Utah",
     "election_date": "2024-11-05",
-    language: "en-US"
+    "language": "en-US"
   },
   "parties": [
     { "id": "DEM", "name": "Democratic" },
@@ -62,6 +67,7 @@ The output JSON should define:
   "contests": [
     {
       "section": "Federal Office",
+      "order": 1
       "contest_name": "President of the United States",
       "contest_type": "candidate",
       "vote_variation": "1-of-m",
@@ -75,6 +81,7 @@ The output JSON should define:
     },
     {
       "section": "State Office",
+      "order": 2
       "contest_name": "Governor",
       "contest_type": "candidate",
       "vote_variation": "1-of-m",
@@ -87,6 +94,7 @@ The output JSON should define:
     },
     {
       "section": "Judicial Retention",
+      "order": 3
       "contest_name": "Shall John Smith be retained as Judge of the Supreme Court?",
       "contest_type": "retention",
       "vote_variation": "1-of-2",
@@ -99,6 +107,7 @@ The output JSON should define:
     },
     {
       "section": "Countywide Ballot Propositions",
+      "order": 4
       "contest_name": "Proposition 5 - Zoo, Arts, and Parks Tax",
       "contest_type": "proposition",
       "vote_variation": "1-of-2",
@@ -111,6 +120,7 @@ The output JSON should define:
     },
     {
       "section": "Constitutional Amendments",
+      "order": 5
       "contest_name": "Constitutional Amendment A",
       "contest_type": "amendment",
       "vote_variation": "1-of-2",
@@ -123,6 +133,7 @@ The output JSON should define:
     },
     {
       "section": "Constitutional Amendments",
+      "order": 6
       "contest_name": "Constitutional Amendment D",
       "contest_type": "amendment",
       "vote_variation": "1-of-2",
@@ -140,7 +151,7 @@ The output JSON should define:
 🚫 Do not add explanations. Output ONLY valid JSON.
 🚫 Don't include JSON markdown in your answer.
 🚫 Parties should NOT be shown in option names for example "CANDIDATE A" vs "CANDIDATE A (DEM)"
-🚫 Write Ins options should NOT say anything other than "WRITE IN" for consistency
+🚫 Write Ins options should NOT say anything other than "WRITE-IN" for consistency
 ✅ Always keep the same casing. If it is in all caps, it should remain in all caps
 ✅ Be as consistent as possible
 ✅ The ballot strings may be in English or Spanish

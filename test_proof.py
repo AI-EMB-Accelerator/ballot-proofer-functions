@@ -22,3 +22,18 @@ proof = proof_ballot(test_definition, reference_definition)
 
 with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
     f.write(proof)
+
+INPUT_PATH = "./input/definitions/ballot_definition_wrong.json"
+OUTPUT_PATH = "./output/proofs/ballot_proof_wrong.json"
+PAGES = "1"
+BALLOT_URL = "https://ballotprooferstorage.blob.core.windows.net/ballots/ballot-type-1-english.pdf"
+
+test_definition = get_definition(BALLOT_URL, pages=PAGES)
+
+with open(INPUT_PATH, "r", encoding="utf-8") as file:
+    reference_definition = json.load(file)
+
+proof = proof_ballot(test_definition, reference_definition)
+
+with open(OUTPUT_PATH, "w", encoding="utf-8") as f:
+    f.write(proof)
