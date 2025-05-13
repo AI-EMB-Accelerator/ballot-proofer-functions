@@ -65,7 +65,7 @@ def proof_ballot_api(req: func.HttpRequest) -> func.HttpResponse:
         blob_url = save_to_blob_storage(ballot_path)
         logging.info("Ballot uploaded to blob storage: %s", blob_url)
 
-        reference_ballot_definition = json.loads(reference)
+        reference_ballot_definition = reference
 
         test_ballot_definition = get_definition(blob_url, pages=pages)
         proof = proof_ballot(test_ballot_definition, reference_ballot_definition)
@@ -73,8 +73,15 @@ def proof_ballot_api(req: func.HttpRequest) -> func.HttpResponse:
             locate_proof_errors(proof, blob_url, pages=pages) if locators else None
         )
 
+        response = {
+            "proof": json.loads(proof),
+            "locators": locators,
+            "ballot_url": blob_url,
+        }
+        body = json.dumps(response)
+
         return func.HttpResponse(
-            {"proof": proof, "locators": locators, "ballot_url": blob_url},
+            body,
             mimetype="application/json",
             status_code=200,
         )
