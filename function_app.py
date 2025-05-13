@@ -49,7 +49,7 @@ def proof_ballot_api(req: func.HttpRequest) -> func.HttpResponse:
     try:
         # Validate inputs
         ballot = req.files.get("ballot")
-        reference = req.files.get("reference")
+        reference = req.form.get("reference") or "{}"
         pages = req.form.get("pages") or "1"
         locators = req.form.get("locators") == "true"
 
@@ -65,12 +65,7 @@ def proof_ballot_api(req: func.HttpRequest) -> func.HttpResponse:
         blob_url = save_to_blob_storage(ballot_path)
         logging.info("Ballot uploaded to blob storage: %s", blob_url)
 
-        try:
-            reference_ballot_definition = json.load(reference.stream)
-        except json.JSONDecodeError:
-            return func.HttpResponse(
-                "Invalid JSON in 'reference' file", status_code=400
-            )
+        reference_ballot_definition = json.loads(reference)
 
         test_ballot_definition = get_definition(blob_url, pages=pages)
         proof = proof_ballot(test_ballot_definition, reference_ballot_definition)
