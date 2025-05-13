@@ -28,12 +28,11 @@
         { "order": 1, "name": "CORNEL RONALD WEST / MELINA ABDULLAH", "party_id": null },
         { "order": 2, "name": "LUCIFER \"JUSTIN CASE\" EVERYLOVE", "party_id": null },
         { "order": 3, "name": "JOEL SKOUSEN / RIK COMBS", "party_id": "CON" },
-        { "order": 4, "name": "JILL STEIN / RUDOLPH WARE", "party_id": "GRN" },
-        { "order": 5, "name": "DONALD J. TRUMP / JD VANCE", "party_id": "REP" },
-        { "order": 6, "name": "CHASE OLIVER / MIKE TER MAAT", "party_id": "LIB" },
-        { "order": 7, "name": "KAMALA D. HARRIS / TIM WALZ", "party_id": "DEM" },
-        { "order": 8, "name": "CLAUDIA DE LA CRUZ / KARINA ALEXANDRA GARCIA", "party_id": null },
-        { "order": 9, "name": "WRITE-IN", "party_id": null }
+        { "order": 4, "name": "JD VANCE / DONALD J. TRUMP", "party_id": "REP" },
+        { "order": 5, "name": "CHASE OLIVER / MIKE TER MAAT", "party_id": "LIB" },
+        { "order": 6, "name": "KAMALA D. HARRIS / TOM WALZ", "party_id": "DEM" },
+        { "order": 7, "name": "CLAUDIA DE LA CRUZ / KARINA ALEXANDRA GARCIA", "party_id": null },
+        { "order": 8, "name": "WRITE-IN", "party_id": null }
       ]
     },
     {
@@ -42,13 +41,12 @@
       "contest_name": "U.S. SENATE",
       "contest_type": "candidate",
       "vote_variation": "1-of-m",
-      "write_in_allowed": true,
+      "write_in_allowed": false,
       "question": null,
       "options": [
         { "order": 1, "name": "CARLTON E. BOWEN", "party_id": "IAP" },
         { "order": 2, "name": "JOHN CURTIS", "party_id": "REP" },
-        { "order": 3, "name": "CAROLINE GLEICH", "party_id": "DEM" },
-        { "order": 4, "name": "WRITE-IN", "party_id": null }
+        { "order": 3, "name": "CAROLINE GLEICH", "party_id": "DEM" }
       ]
     },
     {
@@ -60,8 +58,8 @@
       "write_in_allowed": false,
       "question": null,
       "options": [
-        { "order": 1, "name": "GLENN J. WRIGHT", "party_id": "DEM" },
-        { "order": 2, "name": "MIKE KENNEDY", "party_id": "REP" }
+        { "order": 1, "name": "MIKE KENNEDY", "party_id": "REP" },
+        { "order": 2, "name": "GLENN J. WRIGHT", "party_id": "DEM" }
       ]
     },
     {
@@ -73,11 +71,11 @@
       "write_in_allowed": true,
       "question": null,
       "options": [
-        { "order": 1, "name": "SPENCER J. COX / DEIDRE M. HENDERSON", "party_id": "REP" },
+        { "order": 1, "name": "SPENCER J. COX / DEIDRE M. HENDERSON", "party_id": "DEM" },
         { "order": 2, "name": "TOMMY WILLIAMS / ARCHIE A. WILLIAMS III", "party_id": "IAP" },
-        { "order": 3, "name": "BRIAN SMITH KING / REBEKAH CUMMINGS", "party_id": "DEM" },
+        { "order": 3, "name": "BRIAN SMITH KING / REBEKAH CUMMINGS", "party_id": "REP" },
         { "order": 4, "name": "J. ROBERT LATHAM / BARRY EVAN SHORT", "party_id": "LIB" },
-        { "order": 5, "name": "TOM TOMENY / WILLIAM LANSING TAYLOR", "party_id": null },
+        { "order": 5, "name": "WILLIAM LANSING TAYLOR / TOM TOMENY", "party_id": null },
         { "order": 6, "name": "WRITE-IN", "party_id": null }
       ]
     },
@@ -106,7 +104,7 @@
       "write_in_allowed": false,
       "question": null,
       "options": [
-        { "order": 1, "name": "TINA CANNON", "party_id": "REP" },
+        { "order": 1, "name": "TINA CANON", "party_id": "REP" },
         { "order": 2, "name": "JEFFREY L. OSTLER", "party_id": "CON" },
         { "order": 3, "name": "CATHERINE VOUTAZ", "party_id": "DEM" }
       ]
