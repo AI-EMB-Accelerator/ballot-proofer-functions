@@ -75,7 +75,7 @@ Each category array should contain objects only if issues are detected:
 ```json
 {
   "id": "unique id for each error"
-  "description": "Clear explanation of the issue.",
+  "description": "Clear explanation of the issue including reference and ballot values when necessary to identify",
   "referenceValue": "What the reference shows.",
   "ballotValue": "What the ballot shows.",
   "recommendation": "How to fix or resolve the issue."
