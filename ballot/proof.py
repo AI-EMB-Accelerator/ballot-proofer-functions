@@ -12,7 +12,7 @@ def proof_ballot(test_definition, reference_definition):
 
     proof = send_prompt(
         ballot_proof_prompt,
-        f"Proof this ballot using REFERENCE BALLOT DEFINITION '{reference_definition}' and the TEST BALLOT DEFINITION '{test_definition}'",
+        f"Proof this ballot using DEFINITION '{reference_definition}' and the BALLOT '{test_definition}'",
         True,
     )
     return proof
